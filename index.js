@@ -12,14 +12,184 @@
 //     THEN my default email program opens and populates the TO field of the email with the address
 // [ ] WHEN I click on the GitHub username
 //     THEN that GitHub profile opens in a new tab
-// [ ] WHEN I start the application
+// [x] WHEN I start the application
 //     THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number
-// [ ] WHEN I enter the team manager’s name, employee ID, email address, and office number
+// [x] WHEN I enter the team manager’s name, employee ID, email address, and office number
 //     THEN I am presented with a menu with the option to add an engineer or an intern or to finish building my team
-// [ ] WHEN I select the engineer option
+// [x] WHEN I select the engineer option
 //     THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu
-// [ ] WHEN I select the intern option
+// [x] WHEN I select the intern option
 //     THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu
 // [ ] WHEN I decide to finish building my team
 //     THEN I exit the application, and the HTML is generated
 
+// Import Inquirer and File System.
+const inquire = require("inquirer")
+const fs = require("fs")
+
+// Manager Prompts.
+const managerPrompts = [
+  { message: "Enter the manager’s name.",
+    type:    "input",
+    name:    "manager-name",
+    validate(answer) {
+      if (!answer) { return "Please enter the manager’s name." }
+      else { return true }
+    },
+  },
+  { message: "Enter the manager’s employee ID.",
+    type:    "input",
+    name:    "manager-id",
+    validate(answer) {
+      if (!answer) { return "Please enter the manager’s employee ID." }
+      else { return true }
+    },
+  },
+  { message: "Enter the manager’s email address.",
+    type:    "input",
+    name:    "manager-email",
+    validate(answer) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(answer)) { return "Please enter a valid email address." }
+      else { return true }
+    },
+  },
+  { message: "Enter the manager’s office number.",
+    type:    "input",
+    name:    "manager-office",
+    validate(answer) {
+      if (!answer) { return "Please enter the manager’s office number." }
+      else { return true }
+    },
+  },
+]
+
+// Developer Prompts.
+const developerPrompts = [
+  { message: "Enter the developer’s name.",
+    type:    "input",
+    name:    "developer-name",
+    validate(answer) {
+      if (!answer) { return "Please enter the developer’s name." }
+      else { return true }
+    },
+  },
+  { message: "Enter the developer’s employee ID.",
+    type:    "input",
+    name:    "developer-id",
+    validate(answer) {
+      if (!answer) { return "Please enter the developer’s employee ID." }
+      else { return true }
+    },
+  },
+  { message: "Enter the developer’s email address.",
+    type:    "input",
+    name:    "developer-email",
+    validate(answer) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(answer)) { return "Please enter a valid email address." }
+      else { return true }
+    },
+  },
+  { message: "Enter the developer’s GitHub username.",
+    type:    "input",
+    name:    "developer-github",
+    validate(answer) {
+      if (!answer) { return "Please enter the developer’s GitHub username." }
+      else { return true }
+    },
+  },
+]
+
+// Intern Prompts.
+const internPrompts = [
+  { message: "Enter the intern’s name.",
+    type:    "input",
+    name:    "intern-name",
+    validate(answer) {
+      if (!answer) { return "Please enter the intern’s name." }
+      else { return true }
+    },
+  },
+  { message: "Enter the intern’s employee ID.",
+    type:    "input",
+    name:    "intern-id",
+    validate(answer) {
+      if (!answer) { return "Please enter the intern’s employee ID." }
+      else { return true }
+    },
+  },
+  { message: "Enter the intern’s email address.",
+    type:    "input",
+    name:    "intern-email",
+    validate(answer) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(answer)) { return "Please enter a valid email address." }
+      else { return true }
+    },
+  },
+  { message: "Enter the intern’s school.",
+    type:    "input",
+    name:    "intern-school",
+    validate(answer) {
+      if (!answer) { return "Please enter the intern’s school." }
+      else { return true }
+    },
+  },
+]
+
+const continueOrFinishPrompt = [
+  { message: "Choose a role to add to the team. Or if you’re done, choose “Finish.”",
+    type:    "list",
+    choices: ["Developer", "Intern", "Finish"],
+    name:    "role",
+  },
+]
+
+// Prompt for manager information.
+function promptForManagerInformation() {
+  inquire
+  .prompt(managerPrompts)
+  .then((answers) => {
+    console.log(answers) // **
+    promptToContinueOrFinish()
+  })
+}
+
+// Prompt to continue or finish.
+function promptToContinueOrFinish() {
+  inquire
+  .prompt(continueOrFinishPrompt)
+  .then((answer) => {
+    console.log(answer) // **
+    if (answer.role === "Developer") {
+      promptForDeveloperInformation()
+    } else if (answer.role === "Intern") {
+      promptForInternInformation()
+    } else if (answer.role === "Finish") {
+      console.log("Done!") // **
+    }
+  })
+}
+
+// Prompt for developer information.
+function promptForDeveloperInformation() {
+  inquire
+  .prompt(developerPrompts)
+  .then((answers) => {
+    console.log(answers) // **
+    promptToContinueOrFinish()
+  })
+}
+
+// Prompt for intern information.
+function promptForInternInformation() {
+  inquire
+  .prompt(internPrompts)
+  .then((answers) => {
+    console.log(answers) // **
+    promptToContinueOrFinish()
+  })
+}
+
+promptForManagerInformation()
