@@ -23,11 +23,14 @@
 // [ ] WHEN I decide to finish building my team
 //     THEN I exit the application, and the HTML is generated
 
-// Import Inquirer and File System.
+// Todos:
+// [ ] Refactor the code so there‘s only one prompt (not counting the continue-or-finish prompt) and "manager", "developer", or "intern" is passed as a variable.
+
+// Import the Inquirer and File System modules.
 const inquire = require("inquirer")
 const fs = require("fs")
 
-// Manager Prompts.
+// Declare the manager prompts.
 const managerPrompts = [
   { message: "Enter the manager’s name.",
     type:    "input",
@@ -64,7 +67,42 @@ const managerPrompts = [
   },
 ]
 
-// Developer Prompts.
+// Start the app and prompt the user for the manager’s information.
+function startTheApp() {
+  inquire
+  .prompt(managerPrompts)
+  .then((answers) => {
+    console.log(answers) // **
+    promptToContinueOrFinish()
+  })
+}
+
+// Declare the continue or finish prompt.
+const continueOrFinishPrompt = [
+  { message: "Choose a role to add to the team. Or if you’re done, choose “Finish.”",
+    type:    "list",
+    choices: ["Developer", "Intern", "Finish"],
+    name:    "role",
+  },
+]
+
+// Prompt the user to continue or finish.
+function promptToContinueOrFinish() {
+  inquire
+  .prompt(continueOrFinishPrompt)
+  .then((answer) => {
+    console.log(answer) // **
+    if (answer.role === "Developer") {
+      promptForDeveloperInformation()
+    } else if (answer.role === "Intern") {
+      promptForInternInformation()
+    } else if (answer.role === "Finish") {
+      console.log("Done!") // **
+    }
+  })
+}
+
+// Declare the developer prompts.
 const developerPrompts = [
   { message: "Enter the developer’s name.",
     type:    "input",
@@ -101,7 +139,17 @@ const developerPrompts = [
   },
 ]
 
-// Intern Prompts.
+// Prompt the user for the developer’s information.
+function promptForDeveloperInformation() {
+  inquire
+  .prompt(developerPrompts)
+  .then((answers) => {
+    console.log(answers) // **
+    promptToContinueOrFinish()
+  })
+}
+
+// Declare the intern prompts.
 const internPrompts = [
   { message: "Enter the intern’s name.",
     type:    "input",
@@ -138,51 +186,7 @@ const internPrompts = [
   },
 ]
 
-const continueOrFinishPrompt = [
-  { message: "Choose a role to add to the team. Or if you’re done, choose “Finish.”",
-    type:    "list",
-    choices: ["Developer", "Intern", "Finish"],
-    name:    "role",
-  },
-]
-
-// Prompt for manager information.
-function promptForManagerInformation() {
-  inquire
-  .prompt(managerPrompts)
-  .then((answers) => {
-    console.log(answers) // **
-    promptToContinueOrFinish()
-  })
-}
-
-// Prompt to continue or finish.
-function promptToContinueOrFinish() {
-  inquire
-  .prompt(continueOrFinishPrompt)
-  .then((answer) => {
-    console.log(answer) // **
-    if (answer.role === "Developer") {
-      promptForDeveloperInformation()
-    } else if (answer.role === "Intern") {
-      promptForInternInformation()
-    } else if (answer.role === "Finish") {
-      console.log("Done!") // **
-    }
-  })
-}
-
-// Prompt for developer information.
-function promptForDeveloperInformation() {
-  inquire
-  .prompt(developerPrompts)
-  .then((answers) => {
-    console.log(answers) // **
-    promptToContinueOrFinish()
-  })
-}
-
-// Prompt for intern information.
+// Prompt the user for the intern’s information.
 function promptForInternInformation() {
   inquire
   .prompt(internPrompts)
@@ -192,4 +196,4 @@ function promptForInternInformation() {
   })
 }
 
-promptForManagerInformation()
+startTheApp()
