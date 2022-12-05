@@ -28,7 +28,7 @@
 // [x] Add classes and sub-classes.
 // [ ] Add HTML template.
 // [ ] Add code to use HTML template to generate final HTML file.
-// [ ] Refactor the code so there‘s only one prompt (not counting the continue-or-finish prompt) and "manager", "developer", or "intern" is passed as a variable.
+// [x] Refactor the code so there‘s only one prompt (not counting the continue-or-finish prompt) and "manager", "developer", or "intern" is passed as a variable.
 
 // Import the Inquirer and File System modules.
 const inquire = require("inquirer")
@@ -39,47 +39,63 @@ const Manager = require("./lib/Employee/Manager")
 const Developer = require("./lib/Employee/Developer")
 const Intern = require("./lib/Employee/Intern")
 
-// Declare the manager prompts.
-const managerPrompts = [
-  { message: "Enter the manager’s name.",
-    type:    "input",
-    name:    "name",
-    validate(answer) {
-      if (!answer) { return "Please enter the manager’s name." }
-      else { return true }
+// Generate prompts for an employee role.
+function generatePrompts(employeeRole) {
+  let uniqueEmployeePrompt
+  let uniqueEmployeePromptName
+  if (employeeRole === "Manager") {
+    uniqueEmployeePrompt = "office number"
+    uniqueEmployeePromptName = "office"
+  } else if (employeeRole === "Developer") {
+    uniqueEmployeePrompt = "GitHub username"
+    uniqueEmployeePromptName = "github"
+  } else if (employeeRole === "Intern") {
+    uniqueEmployeePrompt = "school"
+    uniqueEmployeePromptName = "school"
+  }
+  employeeRole = employeeRole.toLowerCase()
+  const prompts = [
+    { message: `Enter the ${employeeRole}’s name.`,
+      type:    "input",
+      name:    "name",
+      validate(answer) {
+        if (!answer) { return `Please enter the ${employeeRole}’s name.` }
+        else { return true }
+      },
     },
-  },
-  { message: "Enter the manager’s employee ID.",
-    type:    "input",
-    name:    "id",
-    validate(answer) {
-      if (!answer) { return "Please enter the manager’s employee ID." }
-      else { return true }
+    { message: `Enter the ${employeeRole}’s employee ID.`,
+      type:    "input",
+      name:    "id",
+      validate(answer) {
+        if (!answer) { return `Please enter the ${employeeRole}’s employee ID.` }
+        else { return true }
+      },
     },
-  },
-  { message: "Enter the manager’s email address.",
-    type:    "input",
-    name:    "email",
-    validate(answer) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(answer)) { return "Please enter a valid email address." }
-      else { return true }
+    { message: `Enter the ${employeeRole}’s email address.`,
+      type:    "input",
+      name:    "email",
+      validate(answer) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(answer)) { return `Please enter a valid email address.`}
+        else { return true }
+      },
     },
-  },
-  { message: "Enter the manager’s office number.",
-    type:    "input",
-    name:    "office",
-    validate(answer) {
-      if (!answer) { return "Please enter the manager’s office number." }
-      else { return true }
+    { message: `Enter the ${employeeRole}’s ${uniqueEmployeePrompt}.`,
+      type:    "input",
+      name:    `${uniqueEmployeePromptName}`,
+      validate(answer) {
+        if (!answer) { return `Please enter the ${employeeRole}’s ${uniqueEmployeePrompt}.` }
+        else { return true }
+      },
     },
-  },
-]
+  ]
+  return prompts
+}
 
 // Start the app and prompt the user for the manager’s information.
 function startTheApp() {
   inquire
-  .prompt(managerPrompts)
+  .prompt(generatePrompts("Manager"))
   .then((answers) => {
     const manager = new Manager(answers.name, answers.id, answers.email, answers.office)
     console.log(manager) // **
@@ -112,47 +128,10 @@ function promptToContinueOrFinish() {
   })
 }
 
-// Declare the developer prompts.
-const developerPrompts = [
-  { message: "Enter the developer’s name.",
-    type:    "input",
-    name:    "name",
-    validate(answer) {
-      if (!answer) { return "Please enter the developer’s name." }
-      else { return true }
-    },
-  },
-  { message: "Enter the developer’s employee ID.",
-    type:    "input",
-    name:    "id",
-    validate(answer) {
-      if (!answer) { return "Please enter the developer’s employee ID." }
-      else { return true }
-    },
-  },
-  { message: "Enter the developer’s email address.",
-    type:    "input",
-    name:    "email",
-    validate(answer) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(answer)) { return "Please enter a valid email address." }
-      else { return true }
-    },
-  },
-  { message: "Enter the developer’s GitHub username.",
-    type:    "input",
-    name:    "github",
-    validate(answer) {
-      if (!answer) { return "Please enter the developer’s GitHub username." }
-      else { return true }
-    },
-  },
-]
-
 // Prompt the user for the developer’s information.
 function promptForDeveloperInformation() {
   inquire
-  .prompt(developerPrompts)
+  .prompt(generatePrompts("Developer"))
   .then((answers) => {
     const developer = new Developer(answers.name, answers.id, answers.email, answers.github)
     console.log(developer) // **
@@ -160,47 +139,10 @@ function promptForDeveloperInformation() {
   })
 }
 
-// Declare the intern prompts.
-const internPrompts = [
-  { message: "Enter the intern’s name.",
-    type:    "input",
-    name:    "name",
-    validate(answer) {
-      if (!answer) { return "Please enter the intern’s name." }
-      else { return true }
-    },
-  },
-  { message: "Enter the intern’s employee ID.",
-    type:    "input",
-    name:    "id",
-    validate(answer) {
-      if (!answer) { return "Please enter the intern’s employee ID." }
-      else { return true }
-    },
-  },
-  { message: "Enter the intern’s email address.",
-    type:    "input",
-    name:    "email",
-    validate(answer) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(answer)) { return "Please enter a valid email address." }
-      else { return true }
-    },
-  },
-  { message: "Enter the intern’s school.",
-    type:    "input",
-    name:    "school",
-    validate(answer) {
-      if (!answer) { return "Please enter the intern’s school." }
-      else { return true }
-    },
-  },
-]
-
 // Prompt the user for the intern’s information.
 function promptForInternInformation() {
   inquire
-  .prompt(internPrompts)
+  .prompt(generatePrompts("Intern"))
   .then((answers) => {
     const intern = new Intern(answers.name, answers.id, answers.email, answers.school)
     console.log(intern) // **
