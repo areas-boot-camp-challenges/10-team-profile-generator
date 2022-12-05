@@ -22,8 +22,12 @@
 //     THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu
 // [ ] WHEN I decide to finish building my team
 //     THEN I exit the application, and the HTML is generated
-
+//
 // Todos:
+// [ ] Add unit tests.
+// [ ] Add classes and sub-classes.
+// [ ] Add HTML template.
+// [ ] Add code to use HTML template to generate final HTML file.
 // [ ] Refactor the code so there‘s only one prompt (not counting the continue-or-finish prompt) and "manager", "developer", or "intern" is passed as a variable.
 
 // Import the Inquirer and File System modules.
