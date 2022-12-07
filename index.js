@@ -98,7 +98,18 @@ function startTheApp() {
   .prompt(generatePrompts("Manager"))
   .then((answers) => {
     const manager = new Manager(answers.name, answers.id, answers.email, answers.office)
-    console.log(manager) // **
+    // Print a success message.
+    console.log("Great! On to the next step:")
+    // Read the template file and save it to a new variable.
+    let template = fs.readFileSync("./src/index.html", "utf8")
+    // Replace placeholders with the user’s answers.
+    for (const [key, value] of Object.entries(manager)) { template = template.replaceAll(`{${key}}`, value) }
+    // Replace the role and icon placeholders with the appropriate values.
+    template = template.replace("{role}", manager.getRole())
+    template = template.replace("{icon}", manager.getIcon())
+    // Write the new file to the dist folder.
+    fs.writeFileSync("./dist/index.html", template)
+    // Prompt the user to continue or finish.
     promptToContinueOrFinish()
   })
 }
@@ -151,3 +162,4 @@ function promptForInternInformation() {
 }
 
 startTheApp()
+
