@@ -26,7 +26,7 @@
 // Todos:
 // [x] Add unit tests.
 // [x] Add classes and sub-classes.
-// [ ] Add HTML template.
+// [x] Add HTML template.
 // [ ] Add code to use HTML template to generate final HTML file.
 // [x] Refactor the code so there‘s only one prompt (not counting the continue-or-finish prompt) and "manager", "developer", or "intern" is passed as a variable.
 
