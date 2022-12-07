@@ -8,7 +8,7 @@
 // GIVEN a command-line application that accepts user input:
 // [ ] WHEN I am prompted for my team members and their information
 //     THEN an HTML file is generated that displays a nicely formatted team roster based on user input
-// [ ] WHEN I click on an email address in the HTML
+// [x] WHEN I click on an email address in the HTML
 //     THEN my default email program opens and populates the TO field of the email with the address
 // [ ] WHEN I click on the GitHub username
 //     THEN that GitHub profile opens in a new tab
@@ -40,38 +40,38 @@ const Developer = require("./lib/Employee/Developer")
 const Intern = require("./lib/Employee/Intern")
 
 // Generate prompts for an employee role.
-function generatePrompts(employeeRole) {
-  let uniqueEmployeePrompt
-  let uniqueEmployeePromptName
-  if (employeeRole === "Manager") {
-    uniqueEmployeePrompt = "office number"
-    uniqueEmployeePromptName = "office"
-  } else if (employeeRole === "Developer") {
-    uniqueEmployeePrompt = "GitHub username"
-    uniqueEmployeePromptName = "github"
-  } else if (employeeRole === "Intern") {
-    uniqueEmployeePrompt = "school"
-    uniqueEmployeePromptName = "school"
+function generatePrompts(role) {
+  let uniquePrompt
+  let uniquePromptName
+  if (role === "Manager") {
+    uniquePrompt = "office number"
+    uniquePromptName = "office"
+  } else if (role === "Developer") {
+    uniquePrompt = "GitHub username"
+    uniquePromptName = "github"
+  } else if (role === "Intern") {
+    uniquePrompt = "school"
+    uniquePromptName = "school"
   }
-  employeeRole = employeeRole.toLowerCase()
+  role = role.toLowerCase()
   const prompts = [
-    { message: `Enter the ${employeeRole}’s name.`,
+    { message: `Enter the ${role}’s name.`,
       type:    "input",
       name:    "name",
       validate(answer) {
-        if (!answer) { return `Please enter the ${employeeRole}’s name.` }
+        if (!answer) { return `Please enter the ${role}’s name.` }
         else { return true }
       },
     },
-    { message: `Enter the ${employeeRole}’s employee ID.`,
+    { message: `Enter the ${role}’s employee ID.`,
       type:    "input",
       name:    "id",
       validate(answer) {
-        if (!answer) { return `Please enter the ${employeeRole}’s employee ID.` }
+        if (!answer) { return `Please enter the ${role}’s employee ID.` }
         else { return true }
       },
     },
-    { message: `Enter the ${employeeRole}’s email address.`,
+    { message: `Enter the ${role}’s email address.`,
       type:    "input",
       name:    "email",
       validate(answer) {
@@ -80,11 +80,11 @@ function generatePrompts(employeeRole) {
         else { return true }
       },
     },
-    { message: `Enter the ${employeeRole}’s ${uniqueEmployeePrompt}.`,
+    { message: `Enter the ${role}’s ${uniquePrompt}.`,
       type:    "input",
-      name:    `${uniqueEmployeePromptName}`,
+      name:    `${uniquePromptName}`,
       validate(answer) {
-        if (!answer) { return `Please enter the ${employeeRole}’s ${uniqueEmployeePrompt}.` }
+        if (!answer) { return `Please enter the ${role}’s ${uniquePrompt}.` }
         else { return true }
       },
     },
@@ -98,18 +98,15 @@ function startTheApp() {
   .prompt(generatePrompts("Manager"))
   .then((answers) => {
     const manager = new Manager(answers.name, answers.id, answers.email, answers.office)
-    // Print a success message.
+    // Read the template file and replace placeholders with the user’s answers and appropriate values.
+    let managerHTML = fs.readFileSync("./src/employee.html", "utf8")
+    for (const [key, value] of Object.entries(manager)) { managerHTML = managerHTML.replace(`{${key}}`, value) }
+    managerHTML = managerHTML.replace("{role}", manager.getRole())
+    managerHTML = managerHTML.replace("{icon}", manager.getIcon())
+    managerHTML = managerHTML.replace("{unique-answer-label}", manager.getOfficeLabel())
+    managerHTML = managerHTML.replace("{unique-answer}", manager.getOffice())
+    // Print a success message and prompt the user to continue or finish.
     console.log("Great! On to the next step:")
-    // Read the template file and save it to a new variable.
-    let template = fs.readFileSync("./src/index.html", "utf8")
-    // Replace placeholders with the user’s answers.
-    for (const [key, value] of Object.entries(manager)) { template = template.replaceAll(`{${key}}`, value) }
-    // Replace the role and icon placeholders with the appropriate values.
-    template = template.replace("{role}", manager.getRole())
-    template = template.replace("{icon}", manager.getIcon())
-    // Write the new file to the dist folder.
-    fs.writeFileSync("./dist/index.html", template)
-    // Prompt the user to continue or finish.
     promptToContinueOrFinish()
   })
 }
@@ -135,6 +132,7 @@ function promptToContinueOrFinish() {
       promptForInternInformation()
     } else if (answer.role === "Finish") {
       console.log("Done!") // **
+      console.log(managerHTML) // ** Have to find a way to get this HTML here.
     }
   })
 }
@@ -162,4 +160,3 @@ function promptForInternInformation() {
 }
 
 startTheApp()
-

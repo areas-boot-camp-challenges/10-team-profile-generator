@@ -14,26 +14,15 @@
       </header>
 
       <section id="manager" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
-        <article class="w-64 border-gray-500 shadow-2xl m-5">
-          <header class="bg-blue-500 p-5">
-            <h2 class="text-3xl text-white">{name}</h2>
-            <h3 class="flex items-center text-2xl text-white">
-              {icon}
-              <span class="pl-2">{role}</span>
-            </h3>
-          </header>
-          <section class="bg-gray-100 p-5">
-            <p><b>ID:</b> {id}</p>
-            <p><b>Email:</b> <a class="text-blue-500" href="mailto:{email}">{email}</a></p>
-            <p><b>Office:</b> {office}</p>
-          </section>
-        </article>
+        {manager}
       </section>
 
       <section id="developers" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+        {developers}
       </section>
 
       <section id="interns" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+        {interns}
       </section>
 
     </main>
