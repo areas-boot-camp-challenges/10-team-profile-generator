@@ -34,7 +34,7 @@
 const inquire = require("inquirer")
 const fs = require("fs")
 
-// Import the Manager, Developer, and Intern classes.
+// Import the Manager, Developer, and Intern subclasses.
 const Manager = require("./lib/Employee/Manager")
 const Developer = require("./lib/Employee/Developer")
 const Intern = require("./lib/Employee/Intern")
@@ -93,12 +93,13 @@ function generatePrompts(role) {
 }
 
 // Start the app and prompt the user for the manager’s information.
-function startTheApp() {
+function start() {
   inquire
   .prompt(generatePrompts("Manager"))
   .then((answers) => {
+    // Use the Manager subclass to create a manager object.
     const manager = new Manager(answers.name, answers.id, answers.email, answers.office)
-    // Read the employee.html file and replace all placeholders with the user’s answers and appropriate values.
+    // Read the employee.html template file and replace all placeholders with the user’s answers and appropriate values.
     let managerHTML = fs.readFileSync("./src/employee.html", "utf8")
     for (const [key, value] of Object.entries(manager)) { managerHTML = managerHTML.replaceAll(`{${key}}`, value) }
     managerHTML = managerHTML.replace("{role}", manager.getRole())
@@ -130,12 +131,12 @@ function promptToContinueOrFinish(role, html) {
     } else if (answer.role === "Intern") {
       promptForInternInformation()
     } else if (answer.role === "Finish") {
-      console.log("Done!") // **
-
+      // Read the index.html template file, replace the placeholder with the html, and write the new index.html file to the dist folder.
       let finalHTML = fs.readFileSync("./src/index.html", "utf8")
       finalHTML = finalHTML.replace("{manager}", html)  
       fs.writeFileSync("./dist/index.html", finalHTML)
-
+      // Print success message.
+      console.log("Done!") // **x
     }
   })
 }
@@ -162,4 +163,4 @@ function promptForInternInformation() {
   })
 }
 
-startTheApp()
+start()
