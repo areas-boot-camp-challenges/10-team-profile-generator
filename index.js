@@ -98,16 +98,16 @@ function startTheApp() {
   .prompt(generatePrompts("Manager"))
   .then((answers) => {
     const manager = new Manager(answers.name, answers.id, answers.email, answers.office)
-    // Read the template file and replace placeholders with the user’s answers and appropriate values.
+    // Read the employee.html file and replace all placeholders with the user’s answers and appropriate values.
     let managerHTML = fs.readFileSync("./src/employee.html", "utf8")
-    for (const [key, value] of Object.entries(manager)) { managerHTML = managerHTML.replace(`{${key}}`, value) }
+    for (const [key, value] of Object.entries(manager)) { managerHTML = managerHTML.replaceAll(`{${key}}`, value) }
     managerHTML = managerHTML.replace("{role}", manager.getRole())
     managerHTML = managerHTML.replace("{icon}", manager.getIcon())
     managerHTML = managerHTML.replace("{unique-answer-label}", manager.getOfficeLabel())
     managerHTML = managerHTML.replace("{unique-answer}", manager.getOffice())
-    // Print a success message and prompt the user to continue or finish.
+    // Print a success message and pass the manager role and html to the function that prompts the user to continue or finish.
     console.log("Great! On to the next step:")
-    promptToContinueOrFinish()
+    promptToContinueOrFinish(manager.getRole(), managerHTML)
   })
 }
 
@@ -121,18 +121,21 @@ const continueOrFinishPrompt = [
 ]
 
 // Prompt the user to continue or finish.
-function promptToContinueOrFinish() {
+function promptToContinueOrFinish(role, html) {
   inquire
   .prompt(continueOrFinishPrompt)
   .then((answer) => {
-    console.log(answer) // **
     if (answer.role === "Developer") {
       promptForDeveloperInformation()
     } else if (answer.role === "Intern") {
       promptForInternInformation()
     } else if (answer.role === "Finish") {
       console.log("Done!") // **
-      console.log(managerHTML) // ** Have to find a way to get this HTML here.
+
+      let finalHTML = fs.readFileSync("./src/index.html", "utf8")
+      finalHTML = finalHTML.replace("{manager}", html)  
+      fs.writeFileSync("./dist/index.html", finalHTML)
+
     }
   })
 }
