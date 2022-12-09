@@ -130,8 +130,20 @@ function promptForDeveloperInformation() {
   .then((answers) => {
     // Use the Developer subclass to create a developer object.
     const developer = new Developer(answers.name, answers.id, answers.email, answers.github)
-    console.log(developer) // **
-    promptToContinueOrFinish()
+    // Read the employee.html template file.
+    let developerHTML = fs.readFileSync("./src/employee.html", "utf8")
+    // Replace all placeholders with the user’s answers and appropriate values.
+    for (const [key, value] of Object.entries(developer)) { developerHTML = developerHTML.replaceAll(`{${key}}`, value) }
+    developerHTML = developerHTML.replace("{role}", developer.getRole())
+    developerHTML = developerHTML.replace("{icon}", developer.getIcon())
+    developerHTML = developerHTML.replace("{unique-answer-label}", developer.getGitHubLabel())
+    developerHTML = developerHTML.replace("{unique-answer}", developer.getGitHub())
+    // Push the developer HTML to the html object.
+    html.developersHTML.push(developerHTML)
+    // Print a success message.
+    console.log("Great! On to the next step:")
+    // Pass the updated html object to the function that prompts the user to continue or finish.
+    promptToContinueOrFinish(html)
   })
 }
 
@@ -141,8 +153,20 @@ function promptForInternInformation() {
   .then((answers) => {
     // Use the Intern subclass to create a intern object.
     const intern = new Intern(answers.name, answers.id, answers.email, answers.school)
-    console.log(intern) // **
-    promptToContinueOrFinish()
+    // Read the employee.html template file.
+    let internHTML = fs.readFileSync("./src/employee.html", "utf8")
+    // Replace all placeholders with the user’s answers and appropriate values.
+    for (const [key, value] of Object.entries(intern)) { internHTML = internHTML.replaceAll(`{${key}}`, value) }
+    internHTML = internHTML.replace("{role}", intern.getRole())
+    internHTML = internHTML.replace("{icon}", intern.getIcon())
+    internHTML = internHTML.replace("{unique-answer-label}", intern.getSchoolLabel())
+    internHTML = internHTML.replace("{unique-answer}", intern.getSchool())
+    // Push the intern HTML to the html object.
+    html.internsHTML.push(internHTML)
+    // Print a success message.
+    console.log("Great! On to the next step:")
+    // Pass the updated html object to the function that prompts the user to continue or finish.
+    promptToContinueOrFinish(html)
   })
 }
 
@@ -158,7 +182,9 @@ function promptToContinueOrFinish(html) {
       // Read the index.html template file.
       let finalHTML = fs.readFileSync("./src/index.html", "utf8")
       // Replace all placeholders with the HTML in the html object.
-      finalHTML = finalHTML.replace("{manager}", html.managerHTML[0])
+      finalHTML = finalHTML.replace("{managers}", html.managersHTML.join("\n"))
+      finalHTML = finalHTML.replace("{developers}", html.developersHTML.join("\n"))
+      finalHTML = finalHTML.replace("{interns}", html.internsHTML.join("\n"))
       // Write the new index.html file to the dist folder.
       fs.writeFileSync("./dist/index.html", finalHTML)
       // Print a success message.
