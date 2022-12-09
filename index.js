@@ -6,11 +6,11 @@
 // SO THAT I have quick access to their emails and GitHub profiles
 //
 // GIVEN a command-line application that accepts user input:
-// [ ] WHEN I am prompted for my team members and their information
+// [x] WHEN I am prompted for my team members and their information
 //     THEN an HTML file is generated that displays a nicely formatted team roster based on user input
 // [x] WHEN I click on an email address in the HTML
 //     THEN my default email program opens and populates the TO field of the email with the address
-// [ ] WHEN I click on the GitHub username
+// [x] WHEN I click on the GitHub username
 //     THEN that GitHub profile opens in a new tab
 // [x] WHEN I start the application
 //     THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number
@@ -20,7 +20,7 @@
 //     THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu
 // [x] WHEN I select the intern option
 //     THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu
-// [ ] WHEN I decide to finish building my team
+// [x] WHEN I decide to finish building my team
 //     THEN I exit the application, and the HTML is generated
 
 // Import the Inquirer and File System modules.
@@ -102,7 +102,7 @@ const html = {
 }
 
 // Start the app and prompt the user for the manager’s information.
-function start() {
+function startAndPromptForManagerInformation() {
   inquire.prompt(generatePrompts("Manager"))
   .then((answers) => {
     // Use the Manager subclass to create a manager object.
@@ -119,8 +119,29 @@ function start() {
     html.managersHTML.push(managerHTML)
     // Print a success message.
     console.log("Great! On to the next step:")
-    // Pass the updated html object to the function that prompts the user to continue or finish.
+    // Pass the updated html object to the function that prompts the user to continue or finish, and call the function.
     promptToContinueOrFinish(html)
+  })
+}
+
+// Prompt the user to continue or finish.
+function promptToContinueOrFinish(html) {
+  inquire.prompt(continueOrFinishPrompt)
+  .then((answer) => {
+    if (answer.role === "Developer") { promptForDeveloperInformation() }
+    else if (answer.role === "Intern") { promptForInternInformation() }
+    else if (answer.role === "Finish") {
+      // Read the index.html template file.
+      let finalHTML = fs.readFileSync("./src/index.html", "utf8")
+      // Replace all placeholders with the HTML in the html object.
+      finalHTML = finalHTML.replace("{managers}", html.managersHTML.join("\n"))
+      finalHTML = finalHTML.replace("{developers}", html.developersHTML.join("\n"))
+      finalHTML = finalHTML.replace("{interns}", html.internsHTML.join("\n"))
+      // Write the new index.html file to the dist folder.
+      fs.writeFileSync("./dist/index.html", finalHTML)
+      // Print a success message.
+      console.log("Done!") // **
+    }
   })
 }
 
@@ -142,7 +163,7 @@ function promptForDeveloperInformation() {
     html.developersHTML.push(developerHTML)
     // Print a success message.
     console.log("Great! On to the next step:")
-    // Pass the updated html object to the function that prompts the user to continue or finish.
+    // Pass the updated html object to the function that prompts the user to continue or finish, and call the function.
     promptToContinueOrFinish(html)
   })
 }
@@ -165,32 +186,9 @@ function promptForInternInformation() {
     html.internsHTML.push(internHTML)
     // Print a success message.
     console.log("Great! On to the next step:")
-    // Pass the updated html object to the function that prompts the user to continue or finish.
+    // Pass the updated html object to the function that prompts the user to continue or finish, and call the function.
     promptToContinueOrFinish(html)
   })
 }
 
-// Prompt the user to continue or finish.
-function promptToContinueOrFinish(html) {
-  inquire.prompt(continueOrFinishPrompt)
-  .then((answer) => {
-    if (answer.role === "Developer") {
-      promptForDeveloperInformation()
-    } else if (answer.role === "Intern") {
-      promptForInternInformation()
-    } else if (answer.role === "Finish") {
-      // Read the index.html template file.
-      let finalHTML = fs.readFileSync("./src/index.html", "utf8")
-      // Replace all placeholders with the HTML in the html object.
-      finalHTML = finalHTML.replace("{managers}", html.managersHTML.join("\n"))
-      finalHTML = finalHTML.replace("{developers}", html.developersHTML.join("\n"))
-      finalHTML = finalHTML.replace("{interns}", html.internsHTML.join("\n"))
-      // Write the new index.html file to the dist folder.
-      fs.writeFileSync("./dist/index.html", finalHTML)
-      // Print a success message.
-      console.log("Done!") // **
-    }
-  })
-}
-
-start()
+startAndPromptForManagerInformation()
