@@ -139,8 +139,8 @@ function promptToContinueOrFinish(html) {
       finalHTML = finalHTML.replace("{interns}", html.internsHTML.join("\n"))
       // Write the new index.html file to the dist folder.
       fs.writeFileSync("./dist/index.html", finalHTML)
-      // Print a success message.
-      console.log("Done!") // **
+      // Print a thank-you message.
+      console.log("Thank you for using the Team Profile Generator. Your HTML and CSS file are in the dist/ folder!")
     }
   })
 }
@@ -161,7 +161,8 @@ function promptForDeveloperInformation() {
     developerHTML = developerHTML.replace("{unique-answer}", developer.getGitHub())
     // Push the developer HTML to the html object.
     html.developersHTML.push(developerHTML)
-    // Print a success message.
+    // Print a brief summary and success message.
+    console.log(`Total developers: ${html.managersHTML.length}. Total interns: ${html.internsHTML.length}.`)
     console.log("Great! On to the next step:")
     // Pass the updated html object to the function that prompts the user to continue or finish, and call the function.
     promptToContinueOrFinish(html)
@@ -184,7 +185,8 @@ function promptForInternInformation() {
     internHTML = internHTML.replace("{unique-answer}", intern.getSchool())
     // Push the intern HTML to the html object.
     html.internsHTML.push(internHTML)
-    // Print a success message.
+    // Print a brief summary and success message.
+    console.log(`Total developers: ${html.managersHTML.length}. Total interns: ${html.internsHTML.length}.`)
     console.log("Great! On to the next step:")
     // Pass the updated html object to the function that prompts the user to continue or finish, and call the function.
     promptToContinueOrFinish(html)
