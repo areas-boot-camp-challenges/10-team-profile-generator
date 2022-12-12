@@ -9,7 +9,7 @@ test("Create an object with the developer’s name, ID, email address, and GitHu
   expect( developer.name ).toEqual("Christian")
   expect( developer.id ).toEqual("000000001")
   expect( developer.email ).toEqual("me@areas.me")
-  expect( developer.github ).toEqual("christianareas")
+  expect( developer.gitHub ).toEqual("christianareas")
 })
 
 // Test the Developer methods.
@@ -17,6 +17,6 @@ test("Get the developer’s name, ID, email address, GitHub username, and role."
   expect( developer.getName() ).toEqual("Christian")
   expect( developer.getId() ).toEqual("000000001")
   expect( developer.getEmail() ).toEqual("me@areas.me")
-  expect( developer.getGithub() ).toEqual("christianareas")
+  expect( developer.getGitHub() ).toEqual(`<a class="text-blue-500" href="https://github.com/christianareas">christianareas</a>`)
   expect( developer.getRole() ).toEqual("Developer")
 })
