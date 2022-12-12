@@ -2,7 +2,9 @@
 ## Description
 A Team Profile Generator that’s a pleasure to use. Start with a manager and add as many developers and interns as you like!
 
-<!-- if appropriate, add a screenshot ![image-alt](image-url) -->
+To see it in action, [watch the video](https://drive.google.com/file/d/1KU0bgALVwRsSzYaSwWrsjiuCQpmF-wpe/view).
+
+![Example of Team Profile with a manager (Christian), a developer (Scrooge), and three interns (Huey, Dewey, and Louie).](./src/team-profile.png)
 
 ![GNU GPLv3 License Badge](https://img.shields.io/github/license/areas-boot-camp-challenges/10-team-profile-generator)
 
